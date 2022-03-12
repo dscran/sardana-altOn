@@ -1,5 +1,5 @@
 from sardana.pool.controller import PseudoCounterController, Type, Description, DefaultValue
-from PyTango import AttributeProxy
+from tango import AttributeProxy
 
 class AltOnPseudoCounterController(PseudoCounterController):
     """ A  pseudo counter which remembers the input for negative magnetic
@@ -7,26 +7,31 @@ class AltOnPseudoCounterController(PseudoCounterController):
 
     counter_roles = 'I',
     pseudo_counter_roles = 'O',
-    value = 0
+    _value = 0
 
-    ctrl_properties = {
-        "altOnState": {
-            Type: str,
-            Description: "tango attribute to determine altOn state from",
-            DefaultValue: "domain/family/member/attribute",
-            },
-        }
+    # ctrl_properties = {
+    #     "altOnState": {
+    #         Type: str,
+    #         Description: "tango attribute to determine altOn state from",
+    #         DefaultValue: "domain/family/member/attribute",
+    #         },
+    #     }
 
-    def __init__(self, inst, props):  
+    def __init__(self, inst, props, *args, **kwargs):
         PseudoCounterController.__init__(self, inst, props, *args, **kwargs)
-        self.altonproxy = DeviceProxy(self.altOnState)
+        try:
+            self.altonproxy = AttributeProxy("sys/tg_test/1/long_scalar")
+        except Exception as ex:
+            self._log.error(ex)
 
     def Calc(self, axis, counters):
         counter = counters[0]
         try:
-            if self.altonproxy.read().value < 0:
-                self.value = counter
-        except Exception:
-            pass
+            altOnValue = self.altonproxy.read().value
+            self._log.debug(f"altOnValue={altOnValue}")
+            if altOnValue < 80:
+                self._value = counter
+        except Exception as ex:
+            self._log.error("Can't determine AltOn State: {ex}")
 
-        return self.value
+        return self._value
