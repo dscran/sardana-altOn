@@ -79,11 +79,14 @@ def magnconf(self, moveable, ampl, waittime):
     magnConf = dict(moveable=None, ampl=.1, waitTime=.1)
 
     if moveable is None:
-        magnConf['moveable'] = self.input(
+        moveable = self.input(
             msg="Moveable to switch:",
             data_type=Type.String,
             default_value=magnConf['moveable'],
             )
+        try:
+            mov = 0
+    magnConf['moveable'] = moveable
 
     if ampl is None:
         label, unit = "Amplitude", "A"
