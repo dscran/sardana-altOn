@@ -11,17 +11,17 @@ def acqconf(self):
         self.output("No altOn configuration in environment. Creating new.")
         acqConf = dict(altOn=False, waitTime=0, counters=[])
 
-    label, unit = "Alternate On/Off", ""
-
-    alt_on = self.input(
-            "Alternate Mode On/Off?",
+    acqConf['alt_on'] = self.input(
+            msg="Alternate Mode On/Off?",
             data_type=Type.Boolean,
             title="Alternate Mode",
-            key=label,
-            unit=unit,
             default_value=acqConf['altOn'])
 
-    acqConf['altOn'] = alt_on
+    acqConf['counters'] = self.input(
+            msg="AltOn Pseudocounters to use:",
+            data_type=(str, ),
+            title="Counters",
+            default_value=acqConf['counters'])
 
     self.setEnv('acqConf', acqConf)
 
@@ -36,6 +36,7 @@ def acqrep(self):
     infodict = {
         'enabled': str(acqConf['altOn']),
         'wait time': f"{acqConf['waitTime']:.2f} s",
+        'motor to switch': f"{magnConf['moveable']}",
         'magnet amplitude': f"{magnConf['ampl']:.2f} A",
         'magnet wait time': f"{magnConf['waitTime']:.2f} s",
         'counters used': f"{acqConf['counters']}",
