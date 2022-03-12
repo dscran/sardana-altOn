@@ -19,7 +19,7 @@ def acqconf(self):
 
     counters = self.input(
             msg="AltOn Pseudocounters to use:",
-            data_type=str,
+            data_type=Type.String,
             title="Counters",
             default_value=', '.join(acqConf['counters']))
     acqConf['counters'] = [c.strip() for c in counters.split(',')]
