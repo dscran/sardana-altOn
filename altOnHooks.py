@@ -7,7 +7,7 @@ Created on 12.03.2022
 from sardana.macroserver.macro import macro, Type
 import time
 import os
-from PyTango import DeviceProxy
+from tango import DeviceProxy
 
 @macro()
 def altOnHook(self):
@@ -47,3 +47,27 @@ def altOnHook(self):
         self.debug('mag. waiting for %.2f s', magwaittime)
         time.sleep(magwaittime)
 
+@macro()
+def disableDeterministic(self):
+    """Deterministic scan needs to be disabled for altOn scans.
+    See https://github.com/sardana-org/sardana/pull/1427
+    and https://github.com/sardana-org/sardana/issues/1426
+    """
+
+    parent = self.getParentMacro()
+    if parent: # macro is called from another macro
+        # self.execMacro('send2ctrl ge1dctrl set_exposure 0 {:}'.format(parent.integ_time))
+        # self.execMacro('send2ctrl ge1dctrl set_exposure 1 {:}'.format(parent.integ_time)) 
+        # self.execMacro('send2ctrl ge1dctrl dark 0')
+        # self.execMacro('send2ctrl ge1dctrl dark 1')
+        # time.sleep(1.2*parent.integ_time)
+        # reset pointNb to 0
+        # geCtrlPointNB = AttributeProxy('controller/greateyeslabview1dcontroller/ge1dctrl/pointnb')
+        # geCtrlPointNB.write(0)
+
+        # disable deterministic scans
+        acqConf  = self.getEnv('acqConf')
+        altOn    = acqConf['altOn']
+        if altOn:
+            self.output("disable deterministic scan mode for altOn")
+            parent._gScan.deterministic_scan = False
