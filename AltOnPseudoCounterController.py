@@ -20,7 +20,7 @@ class AltOnPseudoCounterController(PseudoCounterController):
     def __init__(self, inst, props, *args, **kwargs):
         PseudoCounterController.__init__(self, inst, props, *args, **kwargs)
         try:
-            self.altonproxy = AttributeProxy("sys/tg_test/1/long_scalar")
+            self.altonproxy = AttributeProxy("motor/motctrl01/1/Position")
         except Exception as ex:
             self._log.error(ex)
 
@@ -29,8 +29,8 @@ class AltOnPseudoCounterController(PseudoCounterController):
         try:
             altOnValue = self.altonproxy.read().value
             self._log.debug(f"altOnValue={altOnValue}")
-            if altOnValue < 80:
-                self._value = counter
+            if altOnValue < 0:
+                self._value = -counter
         except Exception as ex:
             self._log.error("Can't determine AltOn State: {ex}")
 
