@@ -5,8 +5,8 @@ class AltOnPseudoCounterController(PseudoCounterController):
     """ A  pseudo counter which remembers the input for negative magnetic
     fields and returns it at positive fields"""
 
-    counter_roles = ('I',)
-    pseudo_counter_roles = ('O',)
+    counter_roles = 'I',
+    pseudo_counter_roles = 'O',
     value = 0
 
     ctrl_properties = {
@@ -18,7 +18,7 @@ class AltOnPseudoCounterController(PseudoCounterController):
         }
 
     def __init__(self, inst, props):  
-        PseudoCounterController.__init__(self, inst, props)
+        PseudoCounterController.__init__(self, inst, props, *args, **kwargs)
         self.altonproxy = DeviceProxy(self.altOnState)
 
     def Calc(self, axis, counters):
