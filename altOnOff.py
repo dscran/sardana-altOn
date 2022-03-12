@@ -12,7 +12,8 @@ def alton(self):
     mnt_grp = self.getObj(
         self.getEnv('ActiveMntGrp'),
         type_class=Type.MeasurementGroup)
-    mnt_grp.setEnabled(True, *acqConf['counters'])
+    counters = list(acqConf['counters'])
+    mnt_grp.setEnabled(True, *counters)
 
 
 @macro()
@@ -27,6 +28,7 @@ def altoff(self):
     mnt_grp = self.getObj(
         self.getEnv('ActiveMntGrp'),
         type_class=Type.MeasurementGroup)
-    mnt_grp.setEnabled(False, *acqConf['counters'])
+    counters = list(acqConf['counters'])
+    mnt_grp.setEnabled(False, *counters)
 
 
