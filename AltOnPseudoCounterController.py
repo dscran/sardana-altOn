@@ -8,7 +8,6 @@ class AltOnPseudoCounterController(PseudoCounterController):
     counter_roles = ('I',)
     pseudo_counter_roles = ('O',)
     value = 0
-    field = 0
 
     ctrl_properties = {
         "altOnState": {
@@ -27,7 +26,7 @@ class AltOnPseudoCounterController(PseudoCounterController):
         try:
             if self.altonproxy.read().value < 0:
                 self.value = counter
-        except:
+        except Exception:
             pass
 
         return self.value

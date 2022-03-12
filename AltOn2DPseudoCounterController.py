@@ -9,7 +9,6 @@ class AltOn2DPseudoCounterController(PseudoCounterController):
     counter_roles = ('I',)
     pseudo_counter_roles = ('O',)
     value = np.zeros((2048, 2048))
-    field = 0
 
     ctrl_properties = {
         "altOnState": {
