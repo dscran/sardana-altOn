@@ -21,7 +21,7 @@ class AltOn2DPseudoCounterController(PseudoCounterController):
 
     def __init__(self, inst, props, *args, **kwargs):
         PseudoCounterController.__init__(self, inst, props, *args, **kwargs)
-        self.stateproxy = DeviceProxy(self.altOnState)
+        self.altonproxy = DeviceProxy(self.altOnState)
 
     def GetAxisAttributes(self, axis):
         axis_attrs = PseudoCounterController.GetAxisAttributes(self, axis)
@@ -33,7 +33,7 @@ class AltOn2DPseudoCounterController(PseudoCounterController):
     def Calc(self, axis, counters):
         counter = counters[0]
         try:
-            if self.stateproxy.read().value < 0:
+            if self.altonproxy.read().value < 0:
                 self.value = counter
         except Exception:
             pass
