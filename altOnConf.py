@@ -11,7 +11,7 @@ def acqconf(self):
         self.output("No altOn configuration in environment. Creating new.")
         acqConf = dict(altOn=False, waitTime=0, counters=[])
 
-    acqConf['alt_on'] = self.input(
+    acqConf['altOn'] = self.input(
             msg="Alternate Mode On/Off?",
             data_type=Type.Boolean,
             title="Alternate Mode",
