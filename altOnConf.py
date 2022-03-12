@@ -12,7 +12,6 @@ def acqconf(self):
         acqConf = dict(altOn=False, waitTime=0, counters=[])
 
     label, unit = "Alternate On/Off", ""
-    acqConf = dict(altOn=False, waitTime=0, counters=[])
 
     alt_on = self.input(
             "Alternate Mode On/Off?",
@@ -76,7 +75,6 @@ def magnconf(self, moveable, ampl, waittime):
         self.output("No altOn magnet configuration found in environment. "
                     "Creating new.")
         magnConf = dict(moveable=None, ampl=.1, waitTime=.1)
-    magnConf = dict(moveable=None, ampl=.1, waitTime=.1)
 
     if moveable is None:
         moveable = self.input(
@@ -86,6 +84,8 @@ def magnconf(self, moveable, ampl, waittime):
             )
         try:
             mov = 0
+        except Exception:
+            self.error(f"no moveable found: {moveable}")
     magnConf['moveable'] = moveable
 
     if ampl is None:
