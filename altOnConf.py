@@ -17,11 +17,12 @@ def acqconf(self):
             title="Alternate Mode",
             default_value=acqConf['altOn'])
 
-    acqConf['counters'] = self.input(
+    counters = self.input(
             msg="AltOn Pseudocounters to use:",
-            data_type=(str, ),
+            data_type=str,
             title="Counters",
-            default_value=acqConf['counters'])
+            default_value=', '.join(acqConf['counters']))
+    acqConf['counters'] = [c.strip() for c in counters.split(',')]
 
     self.setEnv('acqConf', acqConf)
 
