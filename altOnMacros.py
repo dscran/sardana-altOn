@@ -24,7 +24,7 @@ def acqconf(self):
             title="Counters (wildcards allowed)",
             default_value=', '.join(acqConf['counters']))
     for counter in [c.strip() for c in counterlist.split(',')]:
-        counter_objs = self.findObjs(counter, Type.PseudoCounters, reserve=False)
+        counter_objs = self.findObjs(counter, Type.PseudoCounter, reserve=False)
         counters += [c.name for c in counter_objs]
     acqConf['counters'] = counters
 
