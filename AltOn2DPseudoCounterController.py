@@ -1,45 +1,32 @@
-from sardana.pool.controller import PseudoCounterController, Type, MaxDimSize, Description, DefaultValue
-from PyTango import AttributeProxy
+from sardana.pool.controller import PseudoCounterController, Type, MaxDimSize
 import numpy as np
 
 class AltOn2DPseudoCounterController(PseudoCounterController):
     """ A  pseudo counter which remembers the input for negative magnetic
     fields and returns it at positive fields"""
 
-    counter_roles = ('I',)
-    pseudo_counter_roles = ('O',)
-    value = np.zeros((2048, 2048))
-
-    ctrl_properties = {
-        "altOnState": {
-            Type: str,
-            Description: "tango attribute to determine altOn state from",
-            DefaultValue: "domain/family/member/attribute",
-            },
-        }
+    counter_roles = 'in', 'control'
+    pseudo_counter_roles = 'out'
+    _value = np.zeros((2048, 2048))
 
     def __init__(self, inst, props, *args, **kwargs):
         PseudoCounterController.__init__(self, inst, props, *args, **kwargs)
-        self.altonproxy = DeviceProxy(self.altOnState)
 
     def GetAxisAttributes(self, axis):
         axis_attrs = PseudoCounterController.GetAxisAttributes(self, axis)
         axis_attrs = dict(axis_attrs)
         axis_attrs['Value'][Type] = ((float, ), )
-        axis_attrs['Value'][MaxDimSize] = (2048, 2048)
+        axis_attrs['Value'][MaxDimSize] = (4096, 4096)
         return axis_attrs
 
     def Calc(self, axis, counters):
-        counter = counters[0]
-        try:
-            if self.altonproxy.read().value < 0:
-                self.value = counter
-        except Exception:
-            pass
+        counter, control = counters
+        if control:
+            self._value = counter
 
-        return self.value
+        return self._value
 
     def GetAxisPar(self, axis, par):
         if par == "shape":
-            return [self.value.shape[0],self.value.shape[1]]
+            return self._value.shape
 
