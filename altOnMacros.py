@@ -17,12 +17,16 @@ def acqconf(self):
             title="Alternate Mode",
             default_value=acqConf['altOn'])
 
-    counters = self.input(
-            msg="AltOn Pseudocounters to use:",
+    counters = []
+    counterlist = self.input(
+            msg="Comma-separated list of AltOn Pseudocounters to use:",
             data_type=Type.String,
-            title="Counters",
+            title="Counters (wildcards allowed)",
             default_value=', '.join(acqConf['counters']))
-    acqConf['counters'] = [c.strip() for c in counters.split(',')]
+    for counter in [c.strip() for c in counterlist.split(',')]:
+        counter_objs = self.findObjs(counter, Type.PseudoCounters, reserve=False)
+        counters += [c.name for c in counter_objs]
+    acqConf['counters'] = counters
 
     self.setEnv('acqConf', acqConf)
 
